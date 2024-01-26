@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local storage uniquement</title>
+    <style>
+        .container{
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ccc;
+            margin: 100px auto;
+        }
+        .input {
+            display: flex;
+        }
+        .input input{
+            width: 50%;
+            height: 27px;
+            font-size: 18px;
+        }
+        button{
+            width: 100%;
+            background-color: black;
+            color: white;
+            margin: 20px 0px;
+            height: 30px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="input">
+            <input type="text" name="prenom" id="prenom" placeholder="votre prenom....">
+            <input type="text" name="nom" id="nom" placeholder="votre nom ..">
+        </div>
+        <button onclick="enregistre()">ok</button>
+        <h1></h1>
+    </div>
+
+    <script>
+        let myprenom = document.getElementById("prenom");
+        let mynom = document.getElementById("nom");
+        let h1 = document.querySelector("h1");
+
+        let getitem = JSON.parse(localStorage.getItem("name"));
+
+        if(getitem != null){
+            h1.textContent = `Bonjour ${getitem.firstname} tu a ${getitem.lastname} ans`
+        }
+
+        function enregistre(){
+            let user ={
+                firstname: myprenom.value,
+                lastname: mynom.value
+            }
+            localStorage.setItem("name" , JSON.stringify(user))
+            document.location.reload()
+        }
+    </script>
+
+</body>
+
+</html>

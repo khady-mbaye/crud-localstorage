@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD JAVASCRIPT AVEC LOCAL STORAGE</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            border: 1px solid white;
+            padding: 8px;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: brown;
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            margin: 100px auto;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        input {
+            width: 75%;
+            border-radius: 5px 0px 0px 5px;
+            height: 30px;
+            border: none;
+            outline: none;
+            font-size: 18px;
+        }
+
+        .flex button {
+            border-radius: 0px 5px 5px 0px;
+            border: none;
+            background-color: #aaa;
+            width: 25%;
+            height: 32px;
+            font-size: 18px;
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+        }
+
+        table button {
+            font-size: 18px;
+        }
+
+        #saveupdate {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flex">
+            <input type="text" id="userInput" placeholder="Entrez une valeur...">
+            <button onclick="saveToLocalStorage()" id="delete">Enregistrer</button>
+            <button onclick="update()" id="saveupdate">Update</button>
+        </div>
+
+        <h2>Liste des éléments :</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Valeur</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Les éléments seront ajoutés ici dynamiquement -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let userInput = document.querySelector("#userInput");
+        let tbody = document.getElementById("tableBody");
+
+        document.addEventListener("DOMContentLoaded", () => {
+            afficherDansLeDOM();
+        });
+
+        function saveToLocalStorage() {
+            if (userInput.value.trim() === "") {
+                alert("Veuillez remplir le champ avant d'enregistrer.");
+            } else {
+                let storeArray = JSON.parse(localStorage.getItem("array")) || [];
+                let object = {
+                    name: userInput.value
+                };
+                storeArray.push(object);
+                localStorage.setItem("array", JSON.stringify(storeArray));
+                afficherDansLeDOM();
+                userInput.value = "";
+            }
+        }
+
+        function afficherDansLeDOM() {
+            let storeArray = JSON.parse(localStorage.getItem("array")) || [];
+            tbody.innerHTML = "";
+            storeArray.forEach((element, index) => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${element.name}</td>
+                    <td>
+                        <button onclick="supprimer(${index})">Supprimer</button>
+                        <button onclick="modifier(${index})">Modifier</button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function supprimer(index) {
+            let storeArray = JSON.parse(localStorage.getItem("array")) || [];
+            storeArray.splice(index, 1);
+            localStorage.setItem("array", JSON.stringify(storeArray));
+            afficherDansLeDOM();
+        }
+
+        function modifier(index) {
+            let storeArray = JSON.parse(localStorage.getItem("array")) || [];
+            document.getElementById("delete").style.display = "none";
+            document.getElementById("saveupdate").style.display = "block";
+            userInput.value = storeArray[index].name;
+
+            document.getElementById("saveupdate").addEventListener("click", () => {
+                storeArray[index].name = userInput.value;
+                localStorage.setItem("array", JSON.stringify(storeArray));
+                document.getElementById("delete").style.display = "block";
+                document.getElementById("saveupdate").style.display = "none";
+                afficherDansLeDOM();
+                userInput.value = "";
+            });
+        }
+    </script>
+</body>
+</html>

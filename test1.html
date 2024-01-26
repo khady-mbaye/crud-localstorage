@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD JAVASCRIPT AVEC LOCAL STORAGE</title>
+    <style>
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ccc;
+            margin: 100px auto;
+        }
+
+        .input {
+            display: flex;
+        }
+
+        .input input {
+            width: 50%;
+            height: 27px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        #prenom {
+            margin-right: 10px;
+        }
+
+        #nom {
+            margin-left: 10px;
+        }
+
+        #ok {
+            width: 100%;
+            background-color: black;
+            color: white;
+            margin: 20px 0px;
+            height: 30px;
+            font-size: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            text-align: center;
+            padding: 5px 0px;
+            font-size: 18px;
+        }
+
+        table button {
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="input">
+            <input type="text" name="prenom" id="prenom" placeholder="votre prenom....">
+            <input type="text" name="nom" id="nom" placeholder="votre nom ..">
+        </div>
+        <button onclick="enregistre()" id="ok">ok</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Prenom</th>
+                    <th>Nom</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let myprenom = document.getElementById("prenom");
+        let mynom = document.getElementById("nom");
+        let affichage = document.querySelector(".tbody");
+
+        // Afficher les données existantes dans le DOM
+        function afficher() {
+            affichage.innerHTML = ""; // Effacer le contenu actuel
+            let getitem = JSON.parse(localStorage.getItem("name")) || [];
+
+            getitem.forEach((item, index) => {                                                                                                                                                      
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${item.firstname}</td>
+                    <td>${item.lastname}</td>
+                    <td>
+                        <button onclick="modifier(${index})">Modifier</button>
+                        <button onclick="deleteItem(${index})">Supprimer</button>
+                    </td>
+                `;
+                affichage.appendChild(tr);
+            });
+        }
+
+        // Enregistrer les éléments du formulaire dans le localStorage
+        function enregistre() {
+            let getitem = JSON.parse(localStorage.getItem("name")) || [];
+            let user = {
+                firstname: myprenom.value,
+                lastname: mynom.value
+            };
+            getitem.unshift(user);
+            localStorage.setItem("name", JSON.stringify(getitem));
+            afficher(); // Appeler la fonction afficher pour mettre à jour l'affichage
+            mynom.value = "";
+            myprenom.value = '';
+        }
+
+        // Supprimer un élément dans le localStorage ainsi que dans le tableau et mettre à jour l'affichage
+        function deleteItem(index) {
+            let getitem = JSON.parse(localStorage.getItem("name")) || [];
+            getitem.splice(index, 1);
+            localStorage.setItem("name", JSON.stringify(getitem));
+            afficher(); // Appeler la fonction afficher pour mettre à jour l'affichage
+        }
+
+        // Modifier un élément dans le tableau
+        function modifier(index) {
+
+        }
+
+        // Appeler la fonction afficher lors du chargement de la page
+        afficher();
+    </script>
+</body>
+
+</html>
